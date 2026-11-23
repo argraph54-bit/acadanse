@@ -21,6 +21,7 @@ const NAV = [
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const img = name => `assets/img/${name}.webp`;
+const current = (el, on) => on ? el.setAttribute('aria-current', 'true') : el.removeAttribute('aria-current');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const here = location.pathname.split('/').pop() || 'index.html';
 
@@ -72,7 +73,13 @@ function reveal(root = document) {
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
-  els.forEach(el => io.observe(el));
+  // What is already on screen is shown at once (.now = no transition): the page-to-page
+  // transition is the entrance. Only what gets scrolled to animates in.
+  const shown = [];
+  els.forEach(el => el.getBoundingClientRect().top < innerHeight ? shown.push(el) : io.observe(el));
+  shown.forEach(el => el.classList.add('now', 'in'));
+  // .now only has to cover the first frames; dropping it gives hover transitions back.
+  requestAnimationFrame(() => requestAnimationFrame(() => shown.forEach(el => el.classList.remove('now'))));
 }
 
 // Scroll-snap carousel: builds dots + prev/next for a .carousel containing a .track.
@@ -98,7 +105,7 @@ function carousel(root, { start = 0 } = {}) {
     if (best === active) return;
     active = best;
     items.forEach((it, i) => it.classList.toggle('is-active', i === best));
-    [...dots.children].forEach((d, i) => d.toggleAttribute('aria-current', i === best));
+    [...dots.children].forEach((d, i) => current(d, i === best));
   };
   track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
   addEventListener('resize', update);
@@ -112,8 +119,8 @@ function carousel(root, { start = 0 } = {}) {
   update();
 }
 
-const profCard = name => PROFS[name]
-  ? `<figure class="prof"><img src="${img(PROFS[name])}" alt="${esc(name)}" loading="lazy"><figcaption>${esc(name)}</figcaption></figure>`
+const profCard = (name, i) => PROFS[name]
+  ? `<figure class="prof"><img src="${img(PROFS[name])}" alt="${esc(name)}" loading="${i ? 'lazy' : 'eager'}"><figcaption>${esc(name)}</figcaption></figure>`
   : `<figure class="prof prof-empty"><div><img src="assets/img/logo.webp" alt="" loading="lazy"></div><figcaption>${esc(name)}</figcaption></figure>`;
 
 const sessionCard = ([title, day, time, prof], showTitle = true) => `
@@ -148,7 +155,7 @@ const PAGES = {
     const io = new IntersectionObserver(entries => entries.forEach(e => {
       if (!e.isIntersecting) return;
       const i = sections.indexOf(e.target);
-      links.forEach((l, j) => l.toggleAttribute('aria-current', i === j));
+      links.forEach((l, j) => current(l, i === j));
       dots.classList.toggle('on-light', e.target.classList.contains('light'));
     }), { threshold: 0.5 });
     sections.forEach(s => io.observe(s));
@@ -231,7 +238,7 @@ const PAGES = {
     const show = () => {
       const slug = location.hash.slice(1) || 'tous';
       const c = COURSES.find(x => x.slug === slug);
-      chips.querySelectorAll('a').forEach(a => a.toggleAttribute('aria-current', a.dataset.slug === (c ? slug : 'tous')));
+      chips.querySelectorAll('a').forEach(a => current(a, a.dataset.slug === (c ? slug : 'tous')));
       if (c) {
         out.innerHTML = `<div class="sessions">${c.sessions.map(s => sessionCard(s)).join('')}</div>
           <p class="ctas"><a class="btn btn-dark" href="cours.html?c=${c.slug}">Découvrir le cours ${esc(c.short)}</a></p>`;
@@ -278,6 +285,13 @@ const PAGES = {
   },
 };
 
-chrome();
-PAGES[document.body.dataset.page]?.();
-reveal();
+// Called inline at the end of <body>, with the scripts loaded in <head>: header, footer and
+// page content are in the DOM before the first paint, so a page never shows up half-built.
+function init() {
+  chrome();
+  PAGES[document.body.dataset.page]?.();
+  reveal();
+}
+// A page cached from before the scripts moved to <head> still loads this file at the end of
+// <body> and never calls init(): run it here so a stale page is not left blank.
+if (document.body) init();

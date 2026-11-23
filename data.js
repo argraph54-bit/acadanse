@@ -23,7 +23,7 @@ const COURSES = [
     tag: 'Élégance, technique, expression !',
     intro: 'La danse classique offre de nombreux bienfaits physiques, mentaux et artistiques. Accessible à différents niveaux, elle permet d’entretenir son corps tout en développant sa grâce et son expression artistique.',
     cards: [
-      ['Développer votre grâce', 'Travaillez votre posture, votre élégance et votre souplesse à travers des mouvements précis et harmonieux.'],
+      ['Développez votre grâce', 'Travaillez votre posture, votre élégance et votre souplesse à travers des mouvements précis et harmonieux.'],
       ['Renforcez votre corps', 'Développez votre tonicité, votre équilibre et votre coordination grâce aux exercices techniques de la danse classique.'],
       ['Exprimez votre art', 'Laissez parler votre créativité, développez votre musicalité et prenez plaisir à vous exprimer à travers la danse.'],
     ],
@@ -282,8 +282,8 @@ const COURSES = [
     tag: 'Détente, équilibre, harmonie !',
     intro: 'Envie de vous accorder une véritable pause bien-être ? Le <strong>Shiatsu</strong> est une pratique d’origine japonaise qui utilise des pressions exercées avec les doigts et les paumes sur différentes zones du corps. Une approche douce qui invite à relâcher les tensions, à retrouver un équilibre intérieur et à profiter d’un moment de profonde détente.',
     cards: [
-      ['Relâcher les tensions', 'Profitez de pressions douces et ciblées pour détendre le corps et favoriser le relâchement musculaire.'],
-      ['Retrouver votre équilibre', 'Découvrez une pratique qui vise à harmoniser la circulation de l’énergie et à favoriser une sensation de bien-être général.'],
+      ['Relâchez les tensions', 'Profitez de pressions douces et ciblées pour détendre le corps et favoriser le relâchement musculaire.'],
+      ['Retrouvez votre équilibre', 'Découvrez une pratique qui vise à harmoniser la circulation de l’énergie et à favoriser une sensation de bien-être général.'],
       ['Accordez-vous une pause', 'Prenez le temps de vous recentrer, de ralentir et de vous reconnecter à vos sensations.'],
     ],
     note: 'Au programme : découverte des principes du Shiatsu, apprentissage des techniques de pression et travail sur différentes zones du corps dans une atmosphère calme et propice à la détente.',
