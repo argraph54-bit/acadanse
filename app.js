@@ -16,7 +16,7 @@ const ICON = {
 
 const NAV = [
   ['Tarifs', 'tarifs.html'], ['Planning', 'planning.html'], ['Danses', 'danses.html'],
-  ['Activités', 'activites.html'], ['Galas', 'galas.html'], ['Festivals', 'galas.html#festivals'], ['Accueil', 'index.html'],
+  ['Activités', 'activites.html'], ['Galas', 'galas.html'], ['Accueil', 'index.html'],
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -173,7 +173,8 @@ const PAGES = {
       main.innerHTML = `<div class="wrap empty"><h1>Cours introuvable</h1><p><a class="btn btn-dark" href="danses.html">Voir les danses</a> <a class="btn btn-dark" href="activites.html">Voir les activités</a></p></div>`;
       return;
     }
-    document.title = `${c.name} — Aca Danse`;
+    const title = c.title || c.name;
+    document.title = `${title} — Aca Danse`;
     const same = COURSES.filter(x => x.kind === c.kind);
     const i = same.indexOf(c);
     const prev = same[(i - 1 + same.length) % same.length];
@@ -185,13 +186,19 @@ const PAGES = {
         <a class="back" href="${back[0]}">← ${back[1]}</a>
         <article class="fiche">
           <div class="fiche-text reveal">
-            <h1>${esc(c.name)}</h1>
-            ${c.desc.map(p => `<p>${esc(p)}</p>`).join('')}
+            <h1>${esc(title)}</h1>
+            <p class="fiche-tag">${esc(c.tag)}</p>
+            <p>${c.intro}</p>
+            <div class="fiche-cards">${c.cards.map(([t, p]) => `<section class="fiche-card"><h2>${esc(t)}</h2><p>${esc(p)}</p></section>`).join('')}</div>
           </div>
-          <div class="fiche-profs carousel reveal">
-            <div class="track">${profs.map(profCard).join('')}</div>
-            <div class="dots"></div>
-          </div>
+          <aside class="fiche-side reveal">
+            ${profs.length ? `
+            <div class="fiche-profs carousel">
+              <div class="track">${profs.map(profCard).join('')}</div>
+              <div class="dots"></div>
+            </div>` : ''}
+            <p class="fiche-note">${esc(c.note)}</p>
+          </aside>
         </article>
         <section class="horaires" aria-labelledby="h-horaires">
           <h2 id="h-horaires">Horaires</h2>
