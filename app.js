@@ -283,6 +283,11 @@ const PAGES = {
   galas() {
     carousel(document.querySelector('.coverflow'), { start: 1 });
   },
+
+  gala() {
+    const show = document.querySelector('.show');
+    if (show) carousel(show);
+  },
 };
 
 // Called inline at the end of <body>, with the scripts loaded in <head>: header, footer and

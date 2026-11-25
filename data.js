@@ -119,7 +119,7 @@ const COURSES = [
     note: 'Au programme : échauffement, apprentissage des bases du Hip-Hop, travail du rythme et de la gestuelle, puis création de chorégraphies dans une ambiance dynamique et décontractée.',
     sessions: [
       ['Hip-Hop 8/12 ans', 'Mercredi', '16h15 – 17h30', 'Fanny'],
-      ['Dance Hall', 'Vendredi', '20h30 – 22h00', 'Fanny'],
+      ['Dance Hall', 'Vendredi', '19h30 – 21h00', 'Fanny'],
     ] },
   { slug: 'k-dance', name: 'K-Dance', short: 'K-Dance', kind: 'danse', pos: 37,
     tag: 'Synchronisation, style, énergie !',
